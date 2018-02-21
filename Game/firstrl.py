@@ -1,15 +1,7 @@
 import libtcodpy as libtcod
+import constants as c
 
-#actual size of the window
-SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 50
-
-#size of the map
-MAP_WIDTH = 80
-MAP_HEIGHT = 45
-
-LIMIT_FPS = 20  #20 frames-per-second maximum
-
+# Version 0.11
 
 color_dark_wall = libtcod.Color(0, 0, 100)
 color_dark_ground = libtcod.Color(50, 50, 150)
@@ -55,8 +47,8 @@ def make_map():
 
     #fill map with "unblocked" tiles
     map = [
-         [Tile(False) for y in range(MAP_HEIGHT)]
-         for x in range(MAP_WIDTH)
+         [Tile(False) for y in range(c.MAP_HEIGHT)]
+         for x in range(c.MAP_WIDTH)
     ]
 
     #place two pillars to test the map
@@ -71,8 +63,8 @@ def render_all():
     global color_light_ground
 
     #go through all tiles, and set their background color
-    for y in range(MAP_HEIGHT):
-        for x in range(MAP_WIDTH):
+    for y in range(c.MAP_HEIGHT):
+        for x in range(c.MAP_WIDTH):
             wall = map[x][y].block_sight
             if wall:
                 libtcod.console_set_char_background(con, x, y, color_dark_wall, libtcod.BKGND_SET)
@@ -84,7 +76,7 @@ def render_all():
         object.draw()
 
     #blit the contents of "con" to the root console
-    libtcod.console_blit(con, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, 0)
+    libtcod.console_blit(con, 0, 0, c.SCREEN_WIDTH, c.SCREEN_HEIGHT, 0, 0, 0)
 
 def handle_keys():
     #key = libtcod.console_check_for_keypress()  #real-time
@@ -116,15 +108,15 @@ def handle_keys():
 #############################################
 
 libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
-libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, 'python/libtcod tutorial', False)
-libtcod.sys_set_fps(LIMIT_FPS)
-con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
+libtcod.console_init_root(c.SCREEN_WIDTH, c.SCREEN_HEIGHT, 'python/libtcod tutorial', False)
+libtcod.sys_set_fps(c.LIMIT_FPS)
+con = libtcod.console_new(c.SCREEN_WIDTH, c.SCREEN_HEIGHT)
 
 #create object representing the player
-player = Object(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, '@', libtcod.white)
+player = Object(c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2, '@', libtcod.white)
 
 #create an NPC
-npc = Object(SCREEN_WIDTH // 2 - 5, SCREEN_HEIGHT // 2, '@', libtcod.yellow)
+npc = Object(c.SCREEN_WIDTH // 2 - 5, c.SCREEN_HEIGHT // 2, '@', libtcod.yellow)
 
 #the list of objects with those two
 objects = [npc, player]
