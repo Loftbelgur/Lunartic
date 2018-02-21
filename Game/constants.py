@@ -1,4 +1,5 @@
 # Constants for the main loop
+# Version 0.1
 
 # Size of the game window
 SCREEN_WIDTH = 80
