@@ -2,4 +2,9 @@
       Keyrsla á leik
 ---------------------------
 
-Keyra firstrl.py til að fá leikinn í gang. Þarfnast Python 3 ( 32 bit ) og Pygame, ekki keyranlegt á Apple / Linux.
+Keyra firstrl.py til að fá leikinn í gang. Þarfnast Python 3 ( 32 bit ) og Pygame.
+
+---------------------------
+        Uppfærsla
+---------------------------
+Ætti að vera keyranlegt á Apple / Linux.
