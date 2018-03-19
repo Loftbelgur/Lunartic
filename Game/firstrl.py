@@ -1,142 +1,143 @@
-import libtcodpy as libtcod
-import constants as c
-
-# Version 0.11
-
-color_dark_wall = libtcod.Color(0, 0, 100)
-color_dark_ground = libtcod.Color(50, 50, 150)
+# 3rd party modules
+import pygame
 
 
-class Tile:
-    #a tile of the map and its properties
-    def __init__(self, blocked, block_sight = None):
-        self.blocked = blocked
+# game files
+import constants
 
-        #by default, if a tile is blocked, it also blocks sight
-        if block_sight is None: block_sight = blocked
-        self.block_sight = block_sight
 
-class Object:
-    #this is a generic object: the player, a monster, an item, the stairs...
-    #it's always represented by a character on screen.
-    def __init__(self, x, y, char, color):
-        self.x = x
-        self.y = y
-        self.char = char
-        self.color = color
+#############################################
+# Structure
+#############################################
+
+class struc_Tile:
+    def __init__(self, block_path):
+        self.block_path = block_path
+# if tile is False player can walk over it.
+# if tile is True player can NOT walk over it.
+
+
+#############################################
+# Objects
+#############################################
+
+class obj_Actor:
+    """Our basic actor object."""
+
+    def __init__(self, x, y, sprite):
+        """Create the actor and set its coordinates."""
+        self.x = x  # map address (not a pixel address)
+        self.y = y  # map address (not a pixel address)
+        self.sprite = sprite
+
+    def draw(self):
+        """Have the actor draw itself."""
+        SURFACE_MAIN.blit(self.sprite, (self.x*constants.CELL_WIDTH,
+                                        self.y*constants.CELL_HEIGHT))
 
     def move(self, dx, dy):
-        #move by the given amount, if the destination is not blocked
-        if not map[self.x + dx][self.y + dy].blocked:
+        """Move the actor.
+        dx = distance to move x.  dy = distance to move y.
+        The actor checks where it and where he wants to move to.
+        Decides if where he wants to move to is a floor tile or a wall tile.
+        """
+        if GAME_MAP[self.x + dx][self.y + dy].block_path == False:
             self.x += dx
             self.y += dy
 
-    def draw(self):
-        #set the color and then draw the character that represents this object at its position
-        libtcod.console_set_default_foreground(con, self.color)
-        libtcod.console_put_char(con, self.x, self.y, self.char, libtcod.BKGND_NONE)
 
-    def clear(self):
-        #erase the character that represents this object
-        libtcod.console_put_char(con, self.x, self.y, ' ', libtcod.BKGND_NONE)
+#############################################
+# Map
+#############################################
 
+def map_create():
+    new_map = [[struc_Tile(False) for y in range(0, constants.MAP_HEIGHT)] for x in range(0, constants.MAP_WIDTH)]
 
 
-def make_map():
-    global map
+    new_map[10][10].block_path = True
+    new_map[10][15].block_path = True
 
-    #fill map with "unblocked" tiles
-    map = [
-         [Tile(False) for y in range(c.MAP_HEIGHT)]
-         for x in range(c.MAP_WIDTH)
-    ]
+    return new_map
 
-    #place two pillars to test the map
-    map[30][22].blocked = True
-    map[30][22].block_sight = True
-    map[50][22].blocked = True
-    map[50][22].block_sight = True
+#############################################
+# Drawing
+#############################################
 
+def draw_game():
+    """
+    Game
+    """
 
-def render_all():
-    global color_light_wall
-    global color_light_ground
+    global SURFACE_MAIN
 
-    #go through all tiles, and set their background color
-    for y in range(c.MAP_HEIGHT):
-        for x in range(c.MAP_WIDTH):
-            wall = map[x][y].block_sight
-            if wall:
-                libtcod.console_set_char_background(con, x, y, color_dark_wall, libtcod.BKGND_SET)
+    # clear the surface
+    SURFACE_MAIN.fill(constants.COLOR_DEFAULT_BG)
+
+    # draw the map
+    draw_map(GAME_MAP)
+
+    #draw the character
+    PLAYER.draw()
+
+    # update the display
+    pygame.display.flip()
+
+def draw_map(map_to_draw):
+
+    for x in range(0, constants.MAP_WIDTH):
+        for y in range(0, constants.MAP_HEIGHT):
+            if map_to_draw[x][y].block_path == True: # if True there is a wall here
+                #draw wall
+                SURFACE_MAIN.blit(constants.S_WALL, ( x*constants.CELL_WIDTH, y*constants.CELL_HEIGHT))
             else:
-                libtcod.console_set_char_background(con, x, y, color_dark_ground, libtcod.BKGND_SET)
+                #draw floor
+                SURFACE_MAIN.blit(constants.S_FLOOR, (x*constants.CELL_WIDTH, y*constants.CELL_HEIGHT))
 
-    #draw all objects in the list
-    for object in objects:
-        object.draw()
+def game_main_loop():
+    """In this function we loop the main game."""
+    game_quit = False
 
-    #blit the contents of "con" to the root console
-    libtcod.console_blit(con, 0, 0, c.SCREEN_WIDTH, c.SCREEN_HEIGHT, 0, 0, 0)
+    while not game_quit:
 
-def handle_keys():
-    #key = libtcod.console_check_for_keypress()  #real-time
-    key = libtcod.console_wait_for_keypress(True)  #turn-based
+        # get player input
+        events_list = pygame.event.get()
 
-    if key.vk == libtcod.KEY_ENTER and key.lalt:
-        #Alt+Enter: toggle fullscreen
-        libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
+        #process input
+        for event in events_list:  # loop through all events that have happened
+            if event.type == pygame.QUIT:  # QUIT attribute - someone closed window
+                game_quit = True
 
-    elif key.vk == libtcod.KEY_ESCAPE:
-        return True  #exit game
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    PLAYER.move(0, -1)
+                if event.key == pygame.K_DOWN:
+                    PLAYER.move(0, 1)
+                if event.key == pygame.K_LEFT:
+                    PLAYER.move(-1, 0)
+                if event.key == pygame.K_RIGHT:
+                    PLAYER.move(1, 0)
+         #draw the game
+        draw_game()
 
-    #movement keys
-    if libtcod.console_is_key_pressed(libtcod.KEY_UP):
-        player.move(0, -1)
+    pygame.quit()
+    exit()
 
-    elif libtcod.console_is_key_pressed(libtcod.KEY_DOWN):
-        player.move(0, 1)
+def game_initialize():
+    """This function initializes the main window, and pygame"""
 
-    elif libtcod.console_is_key_pressed(libtcod.KEY_LEFT):
-        player.move(-1, 0)
+    global SURFACE_MAIN, GAME_MAP, PLAYER
+    # initialize pygame
+    pygame.init()
 
-    elif libtcod.console_is_key_pressed(libtcod.KEY_RIGHT):
-        player.move(1, 0)
+    # set sufrace dimensions
+    SURFACE_MAIN = pygame.display.set_mode((constants.GAME_WIDTH, constants.GAME_HEIGHT))
+    # Ideally the surface should be resizable -- we are going to skip this for now
 
+    GAME_MAP = map_create() # Create the game map. Fills the 2D array with values.
 
-#############################################
-# Initialization & Main Loop
-#############################################
-
-libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
-libtcod.console_init_root(c.SCREEN_WIDTH, c.SCREEN_HEIGHT, 'python/libtcod tutorial', False)
-libtcod.sys_set_fps(c.LIMIT_FPS)
-con = libtcod.console_new(c.SCREEN_WIDTH, c.SCREEN_HEIGHT)
-
-#create object representing the player
-player = Object(c.SCREEN_WIDTH // 2, c.SCREEN_HEIGHT // 2, '@', libtcod.white)
-
-#create an NPC
-npc = Object(c.SCREEN_WIDTH // 2 - 5, c.SCREEN_HEIGHT // 2, '@', libtcod.yellow)
-
-#the list of objects with those two
-objects = [npc, player]
-
-#generate map (at this point it's not drawn to the screen)
-make_map()
+    PLAYER = obj_Actor(0, 0, constants.S_PLAYER)
 
 
-while not libtcod.console_is_window_closed():
-
-    #render the screen
-    render_all()
-
-    libtcod.console_flush()
-
-    #erase all objects at their old locations, before they move
-    for object in objects:
-        object.clear()
-
-    #handle keys and exit game if needed
-    exit = handle_keys()
-    if exit:
-        break
+if __name__ == '__main__':
+    game_initialize()
+    game_main_loop()
