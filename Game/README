@@ -2,7 +2,7 @@
       Keyrsla á leik
 ---------------------------
 
-Keyra firstrl.py til að fá leikinn í gang. Þarfnast Python 3 ( 32 bit ) og Pygame.
+Keyra main.py til að fá leikinn í gang. Þarfnast Python 3 ( 32 bit ) og Pygame.
 
 ---------------------------
         Uppfærsla
