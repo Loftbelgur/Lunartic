@@ -255,7 +255,7 @@ def game_initialize():
 
     creature_com2 = com_Creature('jon')
     ai_com = ai_Test()
-    ENEMY = obj_Actor(15,15, 'alien', constants.S_ENEMY, ai = ai_com)
+    ENEMY = obj_Actor(12,12, 'alien', constants.S_ENEMY, ai = ai_com)
 
     ai_com1 = ai_Test()
     ENEMY2 = obj_Actor(10,10, 'alien2', constants.S_ENEMY, ai = ai_com1)
