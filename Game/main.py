@@ -230,11 +230,13 @@ def game_initialize():
 
     # TEMPORARY SPRITES ""
 
-    #spritesheet = obj_Spritesheet('data/test4.png')
-    #S_PLAYER = spritesheet.get_image('a', 2, 16, 16, (32, 32))
+    spritesheet = obj_Spritesheet('data/char.png')
+
+    # Coulmn, row, sprite size m / n , scale size
+    S_PLAYER = spritesheet.get_image('b', 4, 32, 32, (32, 32))
 
     creature_com1 = com_Creature('siggi')
-    PLAYER = obj_Actor(0, 0, 'human' ,constants.S_PLAYER, creature = creature_com1)
+    PLAYER = obj_Actor(0, 0, 'human' ,S_PLAYER, creature = creature_com1)
 
     creature_com2 = com_Creature('jon')
     ai_com = ai_Test()

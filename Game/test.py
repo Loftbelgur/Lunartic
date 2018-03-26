@@ -1,10 +1,12 @@
 # 3rd party modules
 import pygame
 import unittest
+import random
 
 # Testing classes from main game file
-from firstrl import struc_Tile
-from firstrl import obj_Actor
+from main import struc_Tile
+from main import obj_Actor
+from main import com_Creature
 
 class Teststruc_Tile(unittest.TestCase):
 
@@ -16,8 +18,17 @@ class Teststruc_Tile(unittest.TestCase):
     def test_2(self):
         self.assertLess(self.func.block_path,2)
 
+class Testcom_Creature(unittest.TestCase):
+
+    def setUp(self):
+        self.func = com_Creature('nonni')
+
+    def test_1(self):
+        self.assertEqual(self.func,'nonni')
+
 class Testobj_Actor(unittest.TestCase):
 
+    # Can't get this test to work
     def setUp(self):
         self.func= obj_Actor(1,1,1,1,1,1)
         """
@@ -29,8 +40,6 @@ class Testobj_Actor(unittest.TestCase):
         self.assertEqual(self.func.creature,1)
         self.assertEqual(self.func.ai,1)
     """
-    def test_2(self):
-        self.assertEqual(self.func)
 
 if __name__ == '__main__':
     unittest.main()
