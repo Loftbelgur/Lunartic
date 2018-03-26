@@ -121,9 +121,24 @@ class obj_Spritesheet:
 def map_create():
     new_map = [[struc_Tile(False) for y in range(0, constants.MAP_HEIGHT)] for x in range(0, constants.MAP_WIDTH)]
 
+    new_map[0][0].block_path = True
+    new_map[0][1].block_path = True
+    new_map[0][2].block_path = True
+    new_map[0][3].block_path = True
+    new_map[0][4].block_path = True
+    new_map[0][5].block_path = True
+    new_map[0][6].block_path = True
+    new_map[0][7].block_path = True
+    new_map[0][8].block_path = True
+    new_map[0][9].block_path = True
+    new_map[0][10].block_path = True
+    new_map[0][11].block_path = True
 
-    new_map[10][10].block_path = True
-    new_map[10][15].block_path = True
+    new_map[1][0].block_path = True
+    new_map[2][0].block_path = True
+    new_map[3][0].block_path = True
+
+    new_map[5][5].block_path = True
 
     return new_map
 
@@ -232,17 +247,20 @@ def game_initialize():
 
     spritesheet = obj_Spritesheet('data/char.png')
 
-    # Coulmn, row, sprite size m / n , scale size
+    # Column, row, sprite size m / n , scale size
     S_PLAYER = spritesheet.get_image('b', 4, 32, 32, (32, 32))
 
     creature_com1 = com_Creature('siggi')
-    PLAYER = obj_Actor(0, 0, 'human' ,S_PLAYER, creature = creature_com1)
+    PLAYER = obj_Actor(1, 1, 'human' ,S_PLAYER, creature = creature_com1)
 
     creature_com2 = com_Creature('jon')
     ai_com = ai_Test()
     ENEMY = obj_Actor(15,15, 'alien', constants.S_ENEMY, ai = ai_com)
 
-    GAME_OBJECTS = [PLAYER, ENEMY]
+    ai_com1 = ai_Test()
+    ENEMY2 = obj_Actor(10,10, 'alien2', constants.S_ENEMY, ai = ai_com1)
+
+    GAME_OBJECTS = [PLAYER, ENEMY, ENEMY2]
 
 if __name__ == '__main__':
     game_initialize()
