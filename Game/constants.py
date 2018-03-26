@@ -23,7 +23,9 @@ MAP_HEIGHT = 30
 # Color definitions
 COLOR_BLACK = (0, 0, 0)  # RGB for black
 COLOR_WHITE = (255, 255, 255)  # RGB for white
-COLOR_GREY = (100, 100, 100)
+COLOR_GREY = (100, 100, 100) # RGB for grey
+COLOR_RED = (255, 0, 0) # RGB for red
+COLOR_GREEN = (0, 128, 0) # RGB for green
 
 # Game colors
 COLOR_DEFAULT_BG = COLOR_GREY
@@ -32,6 +34,7 @@ COLOR_DEFAULT_BG = COLOR_GREY
 # Sprites
 #############################################
 
+# TO do : Make LUnartic constant for paths.
 # character
 S_PLAYER = pygame.image.load('data/python.png')
 S_ENEMY = pygame.image.load('data/crab.png')
